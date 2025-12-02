@@ -44,3 +44,9 @@ TagManager:
   - name: zomba
     uniqueID: 193098211
     locked: 0
+  - name: Ground
+    uniqueID: 3928042487
+    locked: 0
+  - name: Building
+    uniqueID: 1745744829
+    locked: 0
