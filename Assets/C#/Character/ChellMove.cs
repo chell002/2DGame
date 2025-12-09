@@ -6,9 +6,9 @@ using UnityEngine;
 public class ChellMove : MonoBehaviour
 {
     
-    //public event Action<float> onMovePerson;
-    //public event Action<bool> onJumpingPerson;
-    //public event Action<bool> onSliderPerson;
+
+    public event Action onJumpAnim;
+    public event Action<bool> onSliderAnim;
 
     private Rigidbody2D rigidbodyPerson;
     private Transform transformPerson;
@@ -58,7 +58,7 @@ public class ChellMove : MonoBehaviour
     {
         timer -= Time.deltaTime;
         isSlider = timer <= 0 ? false : true;
-        //onSliderPerson.Invoke(isSlider);
+        onSliderAnim.Invoke(isSlider);
         if (isSlider)
         {
             float slideDirection = Mathf.Sign(transformPerson.localScale.x); // Get direction based on facing side
@@ -71,7 +71,7 @@ public class ChellMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rigidbodyPerson.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            //onJumpingPerson?.Invoke(true);
+            onJumpAnim?.Invoke();
             isJumping = false;
         }
 
