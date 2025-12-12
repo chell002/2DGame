@@ -11,6 +11,11 @@ public class CharCam : MonoBehaviour
     {
         tr = transform;
         trTarg = FindObjectOfType<ChellMove>().transform;
+
+    }
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void LateUpdate()

@@ -1,0 +1,117 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ZomMove : MonoBehaviour
+{
+
+    public event Action<float> onMoveZomby;
+
+    private Transform trPerson;
+    private Transform trZomby;
+    private Rigidbody2D rbZomby;
+
+    public float speed = 5f;
+    public float scale = 0.5f;
+    public float minDistansFollow = 15f;
+    public float jumpForce = 6f;
+    private float moveInput = 1f;
+    private Vector3 currentPoint;
+
+    private bool isJumping = false;
+    private bool isJumpWait = false;
+    private bool isFollow = false;
+
+    private float timer = 4f;
+    private float distance = 0f;
+    void Awake()
+    {
+        rbZomby = GetComponent<Rigidbody2D>();
+        trZomby = GetComponent<Transform>();
+        trPerson = FindObjectOfType<ChellMove>().transform;
+    }
+    private void Start()
+    {
+        StartCoroutine(JumpingCoroutine());
+        transform.localScale = new Vector3(scale, scale, scale);
+    }
+    private void OnDisable()
+    {
+        StopCoroutine(JumpingCoroutine());
+    }
+    void Update()
+    {
+        CheckDistance();
+        if (distance <= minDistansFollow)
+        {
+            Follow();
+            isFollow = true;
+        }
+        else
+        {
+            isFollow = false;
+        }
+        Moving();
+        if (isJumping && isJumpWait) Jumping();
+        ScaleDirection();
+    }
+    private void CheckDistance()
+    {
+        distance = Vector2.Distance(trZomby.position, trPerson.position);
+    }
+    private void Follow()
+    {
+        Vector2 direction = (trPerson.position - trZomby.position).normalized;
+        moveInput = direction.x > 0 ? 1 : -1;
+    }
+    private void Moving()
+    {
+        timer -= Time.deltaTime;
+        if (timer <= 0 && !isFollow)
+        {
+
+            timer = UnityEngine.Random.Range(3, 6);
+            moveInput = UnityEngine.Random.Range(-1, 1);
+            moveInput = moveInput < 0 ? 1 : -1;
+        }
+        rbZomby.velocity = new Vector2(moveInput * speed, rbZomby.velocity.y);
+        onMoveZomby?.Invoke(Mathf.Abs(moveInput));
+    }
+    private void Jumping()
+    {
+        rbZomby.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        isJumping = false;
+        isJumpWait = false;
+
+    }
+    private IEnumerator JumpingCoroutine()
+    {
+        while (true)
+        {
+            currentPoint = trZomby.position;
+            yield return new WaitForSeconds(0.1f);
+            if (currentPoint == trZomby.position)
+            {
+                isJumpWait = true;
+            }
+        }
+    }
+    private void ScaleDirection()
+    {
+        if (moveInput < 0f)
+        {
+            transform.localScale = new Vector3(-scale, scale, scale);
+        }
+        else if (moveInput > 0f)
+        {
+            transform.localScale = new Vector3(scale, scale, scale);
+        }
+
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+            isJumping = true;
+    }
+}
