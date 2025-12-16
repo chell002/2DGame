@@ -336,6 +336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85382c89cfc6c348bbea3ca7d42f84f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 5
+  interval: 0.5
 --- !u!114 &222773597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,7 +437,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 1.14, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3974,6 +3976,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd2cd074e3bd5449918710589eda326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentHP_Green: 100
+  currentHP_Red: 0
+  GreenHP_IMG: {fileID: 0}
+  RedHP_IMG: {fileID: 0}
 --- !u!114 &1217159199
 MonoBehaviour:
   m_ObjectHideFlags: 0
