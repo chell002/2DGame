@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+
 
 public class ChellHP : MonoBehaviour
 {
@@ -7,12 +9,16 @@ public class ChellHP : MonoBehaviour
     public float currentHP_Red;
     public Image GreenHP_IMG;
     public Image RedHP_IMG;
+    public event Action OnDead;
     private void Awake()
     {
         GreenHP_IMG = transform.GetChild(0).GetComponent<Image>();
         RedHP_IMG = transform.GetChild(1).GetComponent<Image>();
     }
-
+    private void Start()
+    {
+        UpdateHP();
+    }
 
 
     private void UpdateHP()
@@ -21,6 +27,10 @@ public class ChellHP : MonoBehaviour
         currentHP_Red = Mathf.Clamp(currentHP_Red,0,100);
         GreenHP_IMG.fillAmount = currentHP_Green / 100;
         RedHP_IMG.fillAmount = currentHP_Red / 100;
+        if (currentHP_Green <= 0)
+        {
+        OnDead?. Invoke();
+        }
     }
     public void TakeDamage(float damage)
     {

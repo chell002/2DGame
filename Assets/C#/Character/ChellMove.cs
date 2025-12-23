@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class ChellMove : MonoBehaviour
 {
-    
+    ChellHP HP;
 
     public event Action onJumpAnim;
     public event Action<bool> onSliderAnim;
 
     private Rigidbody2D rigidbodyPerson;
     private Transform transformPerson;
+    Collider2D C;
     //public Transform startPointBullet;
     //public Transform gun;
 
@@ -25,18 +26,26 @@ public class ChellMove : MonoBehaviour
 
     private bool isSlider = false;
     private bool isJumping = false;
-    private void OnEnable()
-    {
-        transform.localScale = new Vector3(scale, scale, scale);
-    }
-    
-    void Start()
+    private bool isStop = false;
+    private void Awake()
     {
         rigidbodyPerson = GetComponent<Rigidbody2D>();
         transformPerson = GetComponent<Transform>();
+        HP = GetComponent<ChellHP>();
+        C = GetComponent<Collider2D>();
+    }
+    private void OnEnable()
+    {
+        transform.localScale = new Vector3(scale, scale, scale);
+        HP.OnDead += StopMove;
+    }
+    private void OnDisable()
+    {
+        HP.OnDead -= StopMove;
     }
     void Update()
     {
+        if (isStop) { return; }
         Slider();
         if (isJumping)
         {
@@ -100,5 +109,12 @@ public class ChellMove : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
             isJumping = true;
+    }
+    void StopMove()
+    {
+        C.enabled = false;
+        rigidbodyPerson.isKinematic = true;
+        rigidbodyPerson.velocity = Vector2.zero;
+        isStop = true;
     }
 }
